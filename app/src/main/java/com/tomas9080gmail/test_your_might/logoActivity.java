@@ -1,5 +1,7 @@
 package com.tomas9080gmail.test_your_might;
 
+import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -11,6 +13,19 @@ public class logoActivity extends AppCompatActivity {
         myLog.d(TAG,"Inicializando onCreate");
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
+
+        new Handler().postDelayed(new Runnable(){
+            public void run(){
+                Intent it = new Intent(logoActivity.this,resumen.class);
+                startActivity(it);
+                finish();
+            }
+        },5000);
+
+
+
+
+
     }
 
     @Override
