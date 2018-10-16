@@ -10,6 +10,7 @@ public class logoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         myLog.d(TAG,"Inicializando onCreate");
         setContentView(R.layout.activity_main);
+        getSupportActionBar().hide();
     }
 
     @Override
