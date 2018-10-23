@@ -20,7 +20,7 @@ public class logoActivity extends AppCompatActivity {
                 startActivity(it);
                 finish();
             }
-        },5000);
+        },1000);
 
 
 

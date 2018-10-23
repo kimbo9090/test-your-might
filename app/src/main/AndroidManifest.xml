@@ -20,7 +20,15 @@
             android:name=".resumen"
             android:label="@string/title_activity_resumen"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".acercaDe"></activity>
+        <activity android:name=".acercaDe" />
+        <activity
+            android:name=".listadoPreguntas"
+            android:label="@string/title_activity_listado_preguntas"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".anadirTarea"
+            android:label="@string/title_activity_anadir_tarea"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

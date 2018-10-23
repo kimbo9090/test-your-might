@@ -47,6 +47,9 @@ public class resumen extends AppCompatActivity {
         if (id == R.id.acercaDe) {
             Intent myIntent = new Intent(resumen.this, acercaDe.class);
             resumen.this.startActivity(myIntent);
+        }else if (id == R.id.listado){
+            Intent myIntent = new Intent(resumen.this, listadoPreguntas.class);
+            resumen.this.startActivity(myIntent);
         }
 
         return super.onOptionsItemSelected(item);

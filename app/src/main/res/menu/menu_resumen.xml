@@ -14,4 +14,10 @@
         android:title="@string/acerca_de"
         app:showAsAction="never"
         ></item>
+    <item
+        android:id="@+id/listado"
+        android:orderInCategory="200"
+        android:title="@string/title_activity_listado_preguntas"
+        app:showAsAction="never"
+        ></item>
 </menu>
