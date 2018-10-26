@@ -1,13 +1,17 @@
 package com.tomas9080gmail.test_your_might;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Button;
 
 public class anadirTarea extends AppCompatActivity {
 
@@ -30,6 +34,46 @@ public class anadirTarea extends AppCompatActivity {
         Spinner spinner = (Spinner) findViewById(R.id.spinner2);
         String [] letra = {"Examen 1","Examen 2","Examen 3"};
         spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, letra));
+        //Añadimos un listener para el boton guardar
+        final Button btnBotonSimple = (Button)findViewById(R.id.guardaPregunta);
+        btnBotonSimple.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                // Metemos en variables el String de las preguntas
+                EditText pregunta1 = (EditText) findViewById(R.id.pregunta1);
+                EditText pregunta2 = (EditText) findViewById(R.id.pregunta2);
+                EditText pregunta3 = (EditText) findViewById(R.id.pregunta3);
+                EditText pregunta4 = (EditText) findViewById(R.id.pregunta4);
+                //Necesitamos mirar si todas las preguntas están rellenas
+                //Si una respuesta está sin rellenar, mandamos un mensaje a la snackbar
+                //Si una respuesta está sin rellenar, le cambiamos el color de fondo.
+                if ( pregunta1.getText().toString().isEmpty() ){
+                    pregunta1.setBackgroundColor(pregunta1.getCurrentHintTextColor());
+                    Snackbar.make(view, "Rellena los campos",Snackbar.LENGTH_LONG).
+                            setAction("Action",null).show();
+                }
+                if ( pregunta2.getText().toString().isEmpty() ){
+                    pregunta2.setBackgroundColor(pregunta1.getCurrentHintTextColor());
+                    Snackbar.make(view, "Rellena los campos",Snackbar.LENGTH_LONG).
+                            setAction("Action",null).show();
+                }
+                if ( pregunta3.getText().toString().isEmpty() ){
+                    pregunta3.setBackgroundColor(pregunta1.getCurrentHintTextColor());
+                    Snackbar.make(view, "Rellena los campos",Snackbar.LENGTH_LONG).
+                            setAction("Action",null).show();
+                }
+                if ( pregunta4.getText().toString().isEmpty() ){
+                    pregunta4.setBackgroundColor(pregunta1.getCurrentHintTextColor());
+                    Snackbar.make(view, "Rellena los campos",Snackbar.LENGTH_LONG).
+                            setAction("Action",null).show();
+                }
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(btnBotonSimple.getWindowToken(), 0);
+
+
+            }
+        });
     }
 
+
 }
+
