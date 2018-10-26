@@ -22,13 +22,12 @@ import android.widget.Button;
 public class anadirTarea extends AppCompatActivity {
     final private int CODE_WRITE_EXTERNAL_STORAGE_PERMISSION = 123;
     private Context context;
-    private ConstraintLayout constraintLayout;
+    private ConstraintLayout constraint;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Accedemos al contexto
-        context = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anadir_tarea);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -50,6 +49,8 @@ public class anadirTarea extends AppCompatActivity {
         final Button btnBotonSimple = (Button)findViewById(R.id.guardaPregunta);
         btnBotonSimple.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(btnBotonSimple.getWindowToken(), 0);
                 int contador = 0;
                 // Metemos en variables el String de las preguntas
                 EditText pregunta1 = (EditText) findViewById(R.id.pregunta1);
@@ -63,48 +64,41 @@ public class anadirTarea extends AppCompatActivity {
                     pregunta1.setBackgroundColor(pregunta1.getCurrentHintTextColor());
                     Snackbar.make(view, "Rellena los campos",Snackbar.LENGTH_LONG).
                             setAction("Action",null).show();
-                }
-                if ( pregunta2.getText().toString().isEmpty() ){
-                    pregunta2.setBackgroundColor(pregunta1.getCurrentHintTextColor());
+                } else if ( pregunta2.getText().toString().isEmpty() ){
+                    pregunta2.setBackgroundColor(pregunta2.getCurrentHintTextColor());
                     Snackbar.make(view, "Rellena los campos",Snackbar.LENGTH_LONG).
                             setAction("Action",null).show();
-                }
-                if ( pregunta3.getText().toString().isEmpty() ){
-                    pregunta3.setBackgroundColor(pregunta1.getCurrentHintTextColor());
+                } else if ( pregunta3.getText().toString().isEmpty() ){
+                    pregunta3.setBackgroundColor(pregunta3.getCurrentHintTextColor());
                     Snackbar.make(view, "Rellena los campos",Snackbar.LENGTH_LONG).
                             setAction("Action",null).show();
-                }
-                if ( pregunta4.getText().toString().isEmpty() ){
-                    pregunta4.setBackgroundColor(pregunta1.getCurrentHintTextColor());
+                } else if ( pregunta4.getText().toString().isEmpty() ){
+                    pregunta4.setBackgroundColor(pregunta4.getCurrentHintTextColor());
                     Snackbar.make(view, "Rellena los campos",Snackbar.LENGTH_LONG).
                             setAction("Action",null).show();
-
-                }
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(btnBotonSimple.getWindowToken(), 0);
-
-                // Ahora que los campos están comprobados, vamos a ver los permisos
-
-                int WriteExternalStoragePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                myLog.d("MainActivity", "WRITE_EXTERNAL_STORAGE Permission: " + WriteExternalStoragePermission);
-                if (WriteExternalStoragePermission != PackageManager.PERMISSION_GRANTED) {
-                    // Permiso denegado
-                    // A partir de Marshmallow (6.0) se pide aceptar o rechazar el permiso en tiempo de ejecución
-                    // En las versiones anteriores no es posible hacerlo
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                        ActivityCompat.requestPermissions(anadirTarea.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
-                        // Una vez que se pide aceptar o rechazar el permiso se ejecuta el método "onRequestPermissionsResult" para manejar la respuesta
-                        // Si el usuario marca "No preguntar más" no se volverá a mostrar este diálogo
+                }else{
+                    // Ahora que los campos están comprobados, vamos a ver los permisos
+                    context = anadirTarea.this;
+                    constraint = findViewById(R.id.constraint);
+                    int WriteExternalStoragePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    if (WriteExternalStoragePermission != PackageManager.PERMISSION_GRANTED) {
+                        // Permiso denegado
+                        // A partir de Marshmallow (6.0) se pide aceptar o rechazar el permiso en tiempo de ejecución
+                        // En las versiones anteriores no es posible hacerlo
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                            ActivityCompat.requestPermissions(anadirTarea.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
+                            // Una vez que se pide aceptar o rechazar el permiso se ejecuta el método "onRequestPermissionsResult" para manejar la respuesta
+                            // Si el usuario marca "No preguntar más" no se volverá a mostrar este diálogo
+                        } else {
+                            Snackbar.make(constraint, "Permisos denegados", Snackbar.LENGTH_LONG)
+                                    .show();
+                        }
                     } else {
-                        Snackbar.make(constraintLayout, "Permisos denegados", Snackbar.LENGTH_LONG)
+                        // Permiso aceptado
+                        Snackbar.make(constraint,getResources().getString(R.string.write_permission_granted), Snackbar.LENGTH_LONG)
                                 .show();
                     }
-                } else {
-                    // Permiso aceptado
-                    Snackbar.make(constraintLayout, "Permisos aceptados", Snackbar.LENGTH_LONG)
-                            .show();
                 }
-
 
             }
         });

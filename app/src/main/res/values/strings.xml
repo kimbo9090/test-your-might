@@ -5,4 +5,5 @@
     <string name="acerca_de">Acerca de</string>
     <string name="title_activity_listado_preguntas">Listado de preguntas</string>
     <string name="title_activity_anadir_tarea">Añadir tarea</string>
+    <string name="write_permission_granted">Permisos concedidos</string>
 </resources>
