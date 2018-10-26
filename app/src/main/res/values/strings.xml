@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">test-your-might</string>
-    <string name="title_activity_resumen">resumen</string>
+    <string name="title_activity_resumen">Resumen</string>
     <string name="action_settings">Ajustes</string>
     <string name="acerca_de">Acerca de</string>
     <string name="title_activity_listado_preguntas">Listado de preguntas</string>
-    <string name="title_activity_anadir_tarea">anadirTarea</string>
+    <string name="title_activity_anadir_tarea">Añadir tarea</string>
 </resources>
