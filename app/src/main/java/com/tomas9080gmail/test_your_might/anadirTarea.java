@@ -82,19 +82,13 @@ public class anadirTarea extends AppCompatActivity {
                     constraint = findViewById(R.id.constraint);
                     int WriteExternalStoragePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                     if (WriteExternalStoragePermission != PackageManager.PERMISSION_GRANTED) {
-                        // Permiso denegado
-                        // A partir de Marshmallow (6.0) se pide aceptar o rechazar el permiso en tiempo de ejecución
-                        // En las versiones anteriores no es posible hacerlo
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                             ActivityCompat.requestPermissions(anadirTarea.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
-                            // Una vez que se pide aceptar o rechazar el permiso se ejecuta el método "onRequestPermissionsResult" para manejar la respuesta
-                            // Si el usuario marca "No preguntar más" no se volverá a mostrar este diálogo
                         } else {
-                            Snackbar.make(constraint, "Permisos denegados", Snackbar.LENGTH_LONG)
+                            Snackbar.make(constraint, "Permisos denegados, no se guardaran las preguntas.", Snackbar.LENGTH_LONG)
                                     .show();
                         }
                     } else {
-                        // Permiso aceptado
                         Snackbar.make(constraint,getResources().getString(R.string.write_permission_granted), Snackbar.LENGTH_LONG)
                                 .show();
                     }
