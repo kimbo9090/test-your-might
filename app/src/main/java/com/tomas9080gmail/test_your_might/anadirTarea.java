@@ -19,6 +19,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Button;
 
+import com.tomas9080gmail.test_your_might.tareas.Pregunta;
+
 public class anadirTarea extends AppCompatActivity {
     final private int CODE_WRITE_EXTERNAL_STORAGE_PERMISSION = 123;
     private Context context;

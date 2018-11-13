@@ -12,25 +12,30 @@ public class Pregunta {
 
     private String respuestaIncorrecta3;
 
+    private String categoria;
+
     private int codigo;
     // Dos contructores, uno con codigo y otro sin codigo
     public Pregunta(String titulo, String respuestaCorrecta, String respuestaIncorrecta1,
-                    String respuestaIncorrecta2, String respuestaIncorrecta3, int codigo) {
+                    String respuestaIncorrecta2, String respuestaIncorrecta3, int codigo,
+                    String categoria) {
         this.titulo = titulo;
         this.respuestaCorrecta = respuestaCorrecta;
         this.respuestaIncorrecta1 = respuestaIncorrecta1;
         this.respuestaIncorrecta2 = respuestaIncorrecta2;
         this.respuestaIncorrecta3 = respuestaIncorrecta3;
         this.codigo = codigo;
+        this.categoria = categoria;
     }
 
     public Pregunta(String titulo, String respuestaCorrecta, String respuestaIncorrecta1,
-                    String respuestaIncorrecta2, String respuestaIncorrecta3) {
+                    String respuestaIncorrecta2, String respuestaIncorrecta3,String categoria) {
         this.titulo = titulo;
         this.respuestaCorrecta = respuestaCorrecta;
         this.respuestaIncorrecta1 = respuestaIncorrecta1;
         this.respuestaIncorrecta2 = respuestaIncorrecta2;
         this.respuestaIncorrecta3 = respuestaIncorrecta3;
+        this.categoria = categoria;
     }
 
     public String getTitulo() {
@@ -79,5 +84,13 @@ public class Pregunta {
 
     public void setCodigo(int codigo) {
         this.codigo = codigo;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
     }
 }
