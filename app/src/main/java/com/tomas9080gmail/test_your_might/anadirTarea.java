@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.tomas9080gmail.test_your_might.tareas.Pregunta;
 
@@ -47,18 +48,23 @@ public class anadirTarea extends AppCompatActivity {
         Spinner spinner = (Spinner) findViewById(R.id.spinner2);
         String [] letra = {"Examen 1","Examen 2","Examen 3"};
         spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, letra));
+        final String tema = spinner.getSelectedItem().toString();
         //Añadimos un listener para el boton guardar
         final Button btnBotonSimple = (Button)findViewById(R.id.guardaPregunta);
         btnBotonSimple.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(btnBotonSimple.getWindowToken(), 0);
-                int contador = 0;
                 // Metemos en variables el String de las preguntas
                 EditText pregunta1 = (EditText) findViewById(R.id.pregunta1);
                 EditText pregunta2 = (EditText) findViewById(R.id.pregunta2);
                 EditText pregunta3 = (EditText) findViewById(R.id.pregunta3);
                 EditText pregunta4 = (EditText) findViewById(R.id.pregunta4);
+                context = anadirTarea.this;
+                String pregunta1S = pregunta1.getText().toString();
+                String pregunta2S = pregunta2.getText().toString();
+                String pregunta3S = pregunta3.getText().toString();
+                String pregunta4S = pregunta4.getText().toString();
                 //Necesitamos mirar si todas las preguntas están rellenas
                 //Si una respuesta está sin rellenar, mandamos un mensaje a la snackbar
                 //Si una respuesta está sin rellenar, le cambiamos el color de fondo.
@@ -79,6 +85,7 @@ public class anadirTarea extends AppCompatActivity {
                     Snackbar.make(view, "Rellena los campos",Snackbar.LENGTH_LONG).
                             setAction("Action",null).show();
                 }else{
+
                     // Ahora que los campos están comprobados, vamos a ver los permisos
                     context = anadirTarea.this;
                     constraint = findViewById(R.id.constraint);
@@ -89,10 +96,16 @@ public class anadirTarea extends AppCompatActivity {
                         } else {
                             Snackbar.make(constraint, "Permisos denegados, no se guardaran las preguntas.", Snackbar.LENGTH_LONG)
                                     .show();
+
                         }
                     } else {
                         Snackbar.make(constraint,getResources().getString(R.string.write_permission_granted), Snackbar.LENGTH_LONG)
                                 .show();
+                        Repositorio miRepo = new Repositorio();
+                        EditText enunciado = findViewById(R.id.enunciado);
+                        String enunciadoS = enunciado.getText().toString();
+                        Pregunta miPregunta = new Pregunta(enunciadoS,pregunta1S,pregunta2S,pregunta3S,pregunta4S,tema);
+                        miRepo.insertaPregunta(context,miPregunta);
                     }
                 }
 

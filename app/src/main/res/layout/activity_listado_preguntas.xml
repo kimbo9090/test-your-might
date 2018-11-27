@@ -22,17 +22,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/content_listado_preguntas" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        app:layout_anchor="@+id/include"
-        app:layout_anchorGravity="right|center"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+    <include layout="@layout/content_listado_preguntas" />
 
 </android.support.design.widget.CoordinatorLayout>

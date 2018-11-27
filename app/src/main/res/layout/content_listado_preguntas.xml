@@ -8,11 +8,40 @@
     tools:context=".listadoPreguntas"
     tools:showIn="@layout/activity_listado_preguntas">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Todavia no has añadido ninguna pregunta"
-        tools:layout_editor_absoluteX="53dp"
-        tools:layout_editor_absoluteY="133dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="22dp"
+            android:clickable="true"
+            app:srcCompat="@android:drawable/ic_menu_add" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="158dp"
+            android:layout_marginBottom="214dp"
+            android:text="No hay preguntas" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/listado"
+            android:layout_width="match_parent"
+            android:layout_height="255dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="0dp" />
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

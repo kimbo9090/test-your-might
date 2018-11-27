@@ -13,9 +13,8 @@ public class Repositorio {
         SQLiteDatabase db = miBD.getWritableDatabase();
 
         if(db != null) {
-            db.execSQL("INSERT INTO Usuarios (titulo, respuestaCorrecta,respuestaIncorrecta1,respuestaIncorrecta2,respuestaIncorrecta3,categoria) " +
-                    "VALUES (" + miPregunta.getTitulo() + ", '" + miPregunta.getRespuestaCorrecta()+ ", '" + miPregunta.getRespuestaIncorrecta1()+ ", '" + miPregunta.getRespuestaIncorrecta2()
-                    + ", '" + miPregunta.getRespuestaIncorrecta3() + ", '" + miPregunta.getCategoria()+ "')");
+            db.execSQL("INSERT INTO Preguntas (titulo, respuestaCorrecta, respuestaIncorrecta1, respuestaIncorrecta2, respuestaIncorrecta3,categoria)"+
+                    "VALUES ('" + miPregunta.getTitulo()+ "', '" + miPregunta.getRespuestaCorrecta() + "', '"+ miPregunta.getRespuestaIncorrecta1()+"', '"+ miPregunta.getRespuestaIncorrecta2()+"', '"+miPregunta.getRespuestaIncorrecta3()+"', '"+miPregunta.getCategoria()+"')");
         }
         db.close();
     }
