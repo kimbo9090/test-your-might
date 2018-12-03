@@ -12,16 +12,20 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import java.util.ArrayList;
 import java.util.Collections;
+
 import com.tomas9080gmail.test_your_might.tareas.Pregunta;
 
 public class listadoPreguntas extends AppCompatActivity {
     private Context myContext;
     private ArrayList<Pregunta> items;
+    private Repositorio miRepo = new Repositorio();
     private static final String TAG = "ListadoPreguntas";
+
     @Override
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myContext= listadoPreguntas.this;
         setContentView(R.layout.activity_listado_preguntas);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -34,6 +38,17 @@ public class listadoPreguntas extends AppCompatActivity {
                 listadoPreguntas.this.startActivity(myIntent);
             }
         });
+        myLog.d(TAG, "Finalizando OnCreate");
+
+    }
+    @Override
+    protected void onResume() {
+        myContext = listadoPreguntas.this;
+        myLog.d(TAG, "Iniciando OnResume");
+        super.onResume();
+        items = new ArrayList<>();
+        //miRepo.insertaPregunta(myContext);
+
 
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.listado);
@@ -56,18 +71,16 @@ public class listadoPreguntas extends AppCompatActivity {
 
                     Bundle bundle = new Bundle();
 
-                    bundle.putInt("Codigo",items.get(position).getCodigo());
+                    bundle.putInt("Codigo", items.get(position).getCodigo());
 
                     editintent.putExtras(bundle);
 
                     startActivity(editintent);
 
 
-
-
                     if (direction == ItemTouchHelper.RIGHT) { //if swipe right
 
-                        myLog.d("deslizando a la derecha","jeje");
+                        myLog.d("deslizando a la derecha", "jeje");
 
                     }
                 }
@@ -81,7 +94,32 @@ public class listadoPreguntas extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         myLog.d(TAG, "Finalizando OnResume");
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-
+    @Override
+    protected void onPause(
+    ) {
+        myLog.d(TAG, "Iniciando OnPause");
+        super.onPause();
+        myLog.d(TAG, "Finalizando OnPause");
+    }
+    @Override
+    protected void onStop() {
+        myLog.d(TAG, "Iniciando OnStop");
+        super.onStop();
+        myLog.d(TAG, "Finalizando OnStop");
+    }
+    @Override
+    protected void onRestart() {
+        myLog.d(TAG, "Iniciando OnRestart");
+        super.onRestart();
+        myLog.d(TAG, "Finalizando OnRestart");
+    }
+    @Override
+    protected void onDestroy() {
+        myLog.d(TAG, "Iniciando OnDestroy");
+        super.onDestroy();
+        myLog.d(TAG, "Finalizando OnDestroy");
+    }
 }

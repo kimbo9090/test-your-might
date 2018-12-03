@@ -61,10 +61,10 @@ public class anadirTarea extends AppCompatActivity {
                 EditText pregunta3 = (EditText) findViewById(R.id.pregunta3);
                 EditText pregunta4 = (EditText) findViewById(R.id.pregunta4);
                 context = anadirTarea.this;
-                String pregunta1S = pregunta1.getText().toString();
-                String pregunta2S = pregunta2.getText().toString();
-                String pregunta3S = pregunta3.getText().toString();
-                String pregunta4S = pregunta4.getText().toString();
+                String respuestaCorrecta = pregunta1.getText().toString();
+                String respuestaIncorrecta1 = pregunta2.getText().toString();
+                String respuestaIncorrecta2 = pregunta3.getText().toString();
+                String respuestaIncorrecta3 = pregunta4.getText().toString();
                 //Necesitamos mirar si todas las preguntas están rellenas
                 //Si una respuesta está sin rellenar, mandamos un mensaje a la snackbar
                 //Si una respuesta está sin rellenar, le cambiamos el color de fondo.
@@ -104,7 +104,7 @@ public class anadirTarea extends AppCompatActivity {
                         Repositorio miRepo = new Repositorio();
                         EditText enunciado = findViewById(R.id.enunciado);
                         String enunciadoS = enunciado.getText().toString();
-                        Pregunta miPregunta = new Pregunta(enunciadoS,pregunta1S,pregunta2S,pregunta3S,pregunta4S,tema);
+                        Pregunta miPregunta = new Pregunta(enunciadoS,respuestaCorrecta,respuestaIncorrecta1,respuestaIncorrecta2,respuestaIncorrecta3,tema);
                         miRepo.insertaPregunta(context,miPregunta);
                     }
                 }

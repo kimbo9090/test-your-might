@@ -21,8 +21,8 @@ public class baseDeDatos extends SQLiteOpenHelper {
 
    SQLiteDatabase db;
 
-   public baseDeDatos(Context contexto) {
-       super (contexto,DATABASE_NAME,null,DATABASE_VERSION);
+   public baseDeDatos(Context contexto,String nombre, CursorFactory factory, int version) {
+       super (contexto,nombre,factory,version);
        db = getWritableDatabase();
    }
 
