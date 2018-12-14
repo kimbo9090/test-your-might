@@ -37,6 +37,9 @@ public class Pregunta {
         this.respuestaIncorrecta3 = respuestaIncorrecta3;
         this.categoria = categoria;
     }
+    public Pregunta(){
+
+    }
 
     public String getTitulo() {
         return titulo;

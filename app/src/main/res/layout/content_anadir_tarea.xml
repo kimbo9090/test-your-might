@@ -26,8 +26,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="32dp"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Enunciado" />
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/pregunta1"
@@ -37,8 +36,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="134dp"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Pregunta 1" />
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/pregunta2"
@@ -47,8 +45,7 @@
             android:layout_below="@+id/pregunta1"
             android:layout_centerHorizontal="true"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Pregunta 2" />
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/pregunta4"
@@ -57,8 +54,7 @@
             android:layout_below="@+id/pregunta3"
             android:layout_centerHorizontal="true"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Pregunta 4" />
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/pregunta3"
@@ -67,8 +63,7 @@
             android:layout_below="@+id/pregunta2"
             android:layout_centerHorizontal="true"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Pregunta 3" />
+            android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/guardaPregunta"

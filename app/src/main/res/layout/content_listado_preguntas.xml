@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,40 +8,26 @@
     tools:context=".listadoPreguntas"
     tools:showIn="@layout/activity_listado_preguntas">
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+
+        android:text="No hay preguntas" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floatingActionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="15dp"
-            android:layout_marginBottom="22dp"
-            android:clickable="true"
-            app:srcCompat="@android:drawable/ic_menu_add" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="139dp"
-            android:layout_marginBottom="263dp"
-            android:text="No hay preguntas" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/listado"
             android:layout_width="match_parent"
-            android:layout_height="255dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
+            android:layout_height="match_parent"
             android:layout_marginStart="0dp"
             android:layout_marginTop="1dp"
             android:layout_marginEnd="0dp" />
-    </RelativeLayout>
-</android.support.constraint.ConstraintLayout>
+
+    </LinearLayout>
+</RelativeLayout>

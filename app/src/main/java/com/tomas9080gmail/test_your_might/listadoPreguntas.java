@@ -10,27 +10,34 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 import com.tomas9080gmail.test_your_might.tareas.Pregunta;
+import com.tomas9080gmail.test_your_might.tareas.adapter;
 
 public class listadoPreguntas extends AppCompatActivity {
     private Context myContext;
     private ArrayList<Pregunta> items;
-    private Repositorio miRepo = new Repositorio();
     private static final String TAG = "ListadoPreguntas";
+    private TextView textView;
 
     @Override
 
 
     protected void onCreate(Bundle savedInstanceState) {
+        myContext = listadoPreguntas.this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listado_preguntas);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // Textview de no hay pregunta
+        textView = findViewById(R.id.textView3);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton2);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -41,60 +48,47 @@ public class listadoPreguntas extends AppCompatActivity {
         myLog.d(TAG, "Finalizando OnCreate");
 
     }
+
     @Override
-    protected void onResume() {
-        myContext = listadoPreguntas.this;
-        myLog.d(TAG, "Iniciando OnResume");
+    protected void onResume(){
+        myLog.d(TAG,"Iniciando on resume");
         super.onResume();
-        items = new ArrayList<>();
-        //miRepo.insertaPregunta(myContext);
+       items = new ArrayList<>();
+       Repositorio.damePreguntas(myContext);
+
+       items = Repositorio.getMisPreguntas();
+
+       if (!items.isEmpty()){
+           textView.setVisibility(View.INVISIBLE);
+
+           final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.listado);
+
+           recyclerView.setHasFixedSize(true);
+
+           adapter adapter = new adapter(items);
+           adapter.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View view) {
+                   int position = recyclerView.getChildAdapterPosition(view);
+
+                   Intent editintent = new Intent(listadoPreguntas.this, anadirTarea.class);
 
 
+                   //bundle.putInt("codigo", items.get(position).getCodigo());
+                   editintent.putExtra("codigo", items.get(position).getCodigo());
 
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.listado);
-        recyclerView.setHasFixedSize(true);
+                    int miPrima = items.get(position).getCodigo();
+                   startActivity(editintent);
 
-        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
+               }
+           });
+           recyclerView.setAdapter(adapter);
 
-            @Override
-            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-                final int position = viewHolder.getAdapterPosition(); //get position which is swipe
-
-                if (direction == ItemTouchHelper.LEFT) { //if swipe left
-
-
-                    Intent editintent = new Intent(myContext, anadirTarea.class);
-
-                    Bundle bundle = new Bundle();
-
-                    bundle.putInt("Codigo", items.get(position).getCodigo());
-
-                    editintent.putExtras(bundle);
-
-                    startActivity(editintent);
-
-
-                    if (direction == ItemTouchHelper.RIGHT) { //if swipe right
-
-                        myLog.d("deslizando a la derecha", "jeje");
-
-                    }
-                }
-            }
-
-        };
-
-
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(simpleCallback);
-        itemTouchhelper.attachToRecyclerView(recyclerView);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        myLog.d(TAG, "Finalizando OnResume");
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+           recyclerView.setLayoutManager(new LinearLayoutManager(this));
+       }else{
+           textView.setVisibility(View.VISIBLE);
+       }
+       myLog.d(TAG,"FInalizando on reusme");
     }
 
     @Override

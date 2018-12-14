@@ -22,19 +22,76 @@ import android.widget.TextView;
 
 import com.tomas9080gmail.test_your_might.tareas.Pregunta;
 
+import java.util.ArrayList;
+
 public class anadirTarea extends AppCompatActivity {
     final private int CODE_WRITE_EXTERNAL_STORAGE_PERMISSION = 123;
     private Context context;
     private ConstraintLayout constraint;
+    private Spinner miSpinnerCategoria;
+    private int codigoPregunta = -1;
+    Repositorio miRepo = new Repositorio();
+
+
+
+    public int getCodigoPregunta() {
+        return codigoPregunta;
+    }
+
+    public void setCodigoPregunta(int codigoPregunta) {
+        this.codigoPregunta = codigoPregunta;
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //Accedemos al contexto
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anadir_tarea);
+        super.onCreate(savedInstanceState);
+        constraint = findViewById(R.id.constraint);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        EditText pregunta1 = (EditText) findViewById(R.id.pregunta1);
+        EditText pregunta2 = (EditText) findViewById(R.id.pregunta2);
+        EditText pregunta3 = (EditText) findViewById(R.id.pregunta3);
+        EditText pregunta4 = (EditText) findViewById(R.id.pregunta4);
+        EditText enunciado = (EditText) findViewById(R.id.enunciado);
+
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        context = anadirTarea.this;
+        ArrayList<String>categorias = new ArrayList<>();
+        Repositorio.cargarCategorias(context);
+        categorias = Repositorio.getMisCategorias();
+
+
+        if(getIntent().hasExtra("codigo") ){
+
+            //Bundle bundle = this.getIntent().getExtras();
+
+            codigoPregunta = getIntent().getExtras().getInt("codigo");
+
+            Pregunta c = miRepo.encuentraPreguntaID(context,codigoPregunta);
+
+            if (c != null) {
+                System.out.println("Ee");
+            }
+
+
+
+            pregunta1.setText(c.getRespuestaCorrecta());
+            pregunta2.setText(c.getRespuestaIncorrecta1());
+            pregunta3.setText(c.getRespuestaIncorrecta2());
+            pregunta4.setText(c.getRespuestaIncorrecta3());
+            enunciado.setText(c.getTitulo());
+
+
+
+
+        }
+
+
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -45,70 +102,80 @@ public class anadirTarea extends AppCompatActivity {
             }
         });
         //Rellenamos el spinner cuando se crea la pantalla
-        Spinner spinner = (Spinner) findViewById(R.id.spinner2);
-        String [] letra = {"Examen 1","Examen 2","Examen 3"};
-        spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, letra));
-        final String tema = spinner.getSelectedItem().toString();
+
+
+
         //Añadimos un listener para el boton guardar
         final Button btnBotonSimple = (Button)findViewById(R.id.guardaPregunta);
         btnBotonSimple.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(btnBotonSimple.getWindowToken(), 0);
-                // Metemos en variables el String de las preguntas
                 EditText pregunta1 = (EditText) findViewById(R.id.pregunta1);
                 EditText pregunta2 = (EditText) findViewById(R.id.pregunta2);
                 EditText pregunta3 = (EditText) findViewById(R.id.pregunta3);
                 EditText pregunta4 = (EditText) findViewById(R.id.pregunta4);
-                context = anadirTarea.this;
-                String respuestaCorrecta = pregunta1.getText().toString();
-                String respuestaIncorrecta1 = pregunta2.getText().toString();
-                String respuestaIncorrecta2 = pregunta3.getText().toString();
-                String respuestaIncorrecta3 = pregunta4.getText().toString();
-                //Necesitamos mirar si todas las preguntas están rellenas
-                //Si una respuesta está sin rellenar, mandamos un mensaje a la snackbar
-                //Si una respuesta está sin rellenar, le cambiamos el color de fondo.
-                if ( pregunta1.getText().toString().isEmpty() ){
-                    pregunta1.setBackgroundColor(pregunta1.getCurrentHintTextColor());
-                    Snackbar.make(view, "Rellena los campos",Snackbar.LENGTH_LONG).
-                            setAction("Action",null).show();
-                } else if ( pregunta2.getText().toString().isEmpty() ){
-                    pregunta2.setBackgroundColor(pregunta2.getCurrentHintTextColor());
-                    Snackbar.make(view, "Rellena los campos",Snackbar.LENGTH_LONG).
-                            setAction("Action",null).show();
-                } else if ( pregunta3.getText().toString().isEmpty() ){
-                    pregunta3.setBackgroundColor(pregunta3.getCurrentHintTextColor());
-                    Snackbar.make(view, "Rellena los campos",Snackbar.LENGTH_LONG).
-                            setAction("Action",null).show();
-                } else if ( pregunta4.getText().toString().isEmpty() ){
-                    pregunta4.setBackgroundColor(pregunta4.getCurrentHintTextColor());
-                    Snackbar.make(view, "Rellena los campos",Snackbar.LENGTH_LONG).
-                            setAction("Action",null).show();
-                }else{
+                EditText enunciado2 = (EditText) findViewById(R.id.enunciado);
+                final String spinner;
 
-                    // Ahora que los campos están comprobados, vamos a ver los permisos
+                if (getCodigoPregunta() != -1) {
+                    Pregunta preguntaActualizar = new Pregunta(enunciado2.getText().toString(), pregunta1.getText().toString(), pregunta2.getText().toString(), pregunta3.getText().toString(), pregunta4.getText().toString(), getCodigoPregunta(), "php");
+
+                    Repositorio.actualizarPregunta(context, preguntaActualizar);
+                } else {
+
+                    // Metemos en variables el String de las preguntas
+
                     context = anadirTarea.this;
-                    constraint = findViewById(R.id.constraint);
-                    int WriteExternalStoragePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                    if (WriteExternalStoragePermission != PackageManager.PERMISSION_GRANTED) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                            ActivityCompat.requestPermissions(anadirTarea.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
-                        } else {
-                            Snackbar.make(constraint, "Permisos denegados, no se guardaran las preguntas.", Snackbar.LENGTH_LONG)
-                                    .show();
-
-                        }
+                    String respuestaCorrecta = pregunta1.getText().toString();
+                    String respuestaIncorrecta1 = pregunta2.getText().toString();
+                    String respuestaIncorrecta2 = pregunta3.getText().toString();
+                    String respuestaIncorrecta3 = pregunta4.getText().toString();
+                    //Necesitamos mirar si todas las preguntas están rellenas
+                    //Si una respuesta está sin rellenar, mandamos un mensaje a la snackbar
+                    //Si una respuesta está sin rellenar, le cambiamos el color de fondo.
+                    if (pregunta1.getText().toString().isEmpty()) {
+                        pregunta1.setBackgroundColor(pregunta1.getCurrentHintTextColor());
+                        Snackbar.make(view, "Rellena los campos", Snackbar.LENGTH_LONG).
+                                setAction("Action", null).show();
+                    } else if (pregunta2.getText().toString().isEmpty()) {
+                        pregunta2.setBackgroundColor(pregunta2.getCurrentHintTextColor());
+                        Snackbar.make(view, "Rellena los campos", Snackbar.LENGTH_LONG).
+                                setAction("Action", null).show();
+                    } else if (pregunta3.getText().toString().isEmpty()) {
+                        pregunta3.setBackgroundColor(pregunta3.getCurrentHintTextColor());
+                        Snackbar.make(view, "Rellena los campos", Snackbar.LENGTH_LONG).
+                                setAction("Action", null).show();
+                    } else if (pregunta4.getText().toString().isEmpty()) {
+                        pregunta4.setBackgroundColor(pregunta4.getCurrentHintTextColor());
+                        Snackbar.make(view, "Rellena los campos", Snackbar.LENGTH_LONG).
+                                setAction("Action", null).show();
                     } else {
-                        Snackbar.make(constraint,getResources().getString(R.string.write_permission_granted), Snackbar.LENGTH_LONG)
-                                .show();
-                        Repositorio miRepo = new Repositorio();
-                        EditText enunciado = findViewById(R.id.enunciado);
-                        String enunciadoS = enunciado.getText().toString();
-                        Pregunta miPregunta = new Pregunta(enunciadoS,respuestaCorrecta,respuestaIncorrecta1,respuestaIncorrecta2,respuestaIncorrecta3,tema);
-                        miRepo.insertaPregunta(context,miPregunta);
-                    }
-                }
 
+                        // Ahora que los campos están comprobados, vamos a ver los permisos
+                        context = anadirTarea.this;
+                        int WriteExternalStoragePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                        if (WriteExternalStoragePermission != PackageManager.PERMISSION_GRANTED) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                ActivityCompat.requestPermissions(anadirTarea.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
+                            } else {
+                                Snackbar.make(constraint, "Permisos denegados, no se guardaran las preguntas.", Snackbar.LENGTH_LONG)
+                                        .show();
+
+                            }
+                        } else {
+                            Snackbar.make(constraint, getResources().getString(R.string.write_permission_granted), Snackbar.LENGTH_LONG)
+                                    .show();
+                            Repositorio miRepo = new Repositorio();
+                            EditText enunciado = findViewById(R.id.enunciado);
+                            String enunciadoS = enunciado.getText().toString();
+                            Pregunta miPregunta = new Pregunta(enunciadoS, respuestaCorrecta, respuestaIncorrecta1, respuestaIncorrecta2, respuestaIncorrecta3, "php");
+                            miRepo.insertaPregunta(context, miPregunta);
+                        }
+                    }
+
+                }
             }
         });
     }
