@@ -34,7 +34,7 @@ public class listadoPreguntas extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         // Textview de no hay pregunta
-        textView = findViewById(R.id.textView3);
+        textView = (TextView) findViewById(R.id.textView3);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton2);

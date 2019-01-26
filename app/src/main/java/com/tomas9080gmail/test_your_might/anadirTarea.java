@@ -12,12 +12,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Button;
+import android.support.v7.app.AlertDialog;
 import android.widget.TextView;
 
 import com.tomas9080gmail.test_your_might.tareas.Pregunta;
@@ -28,7 +30,8 @@ public class anadirTarea extends AppCompatActivity {
     final private int CODE_WRITE_EXTERNAL_STORAGE_PERMISSION = 123;
     private Context context;
     private ConstraintLayout constraint;
-    private Spinner miSpinnerCategoria;
+    private ArrayAdapter <String> adapter;
+    private Spinner spinnerCategoria;
     private int codigoPregunta = -1;
     Repositorio miRepo = new Repositorio();
 
@@ -47,8 +50,9 @@ public class anadirTarea extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_anadir_tarea);
         super.onCreate(savedInstanceState);
-        constraint = findViewById(R.id.constraint);
+        constraint = (ConstraintLayout) findViewById(R.id.constraint);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Button botonCategorias = (Button) findViewById(R.id.anadir_categoria);
 
         EditText pregunta1 = (EditText) findViewById(R.id.pregunta1);
         EditText pregunta2 = (EditText) findViewById(R.id.pregunta2);
@@ -62,8 +66,19 @@ public class anadirTarea extends AppCompatActivity {
         ArrayList<String>categorias = new ArrayList<>();
         Repositorio.cargarCategorias(context);
         categorias = Repositorio.getMisCategorias();
+        adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, categorias);
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinnerCategoria = (Spinner) findViewById(R.id.categoriaSpinner);
+        spinnerCategoria.setAdapter(adapter);
 
+        botonCategorias.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LayoutInflater layoutActivity = LayoutInflater.from(context);
+                View viewAlertDialog = layoutActivity.inflate(R.layout.alert_dialog, null);
 
+            }
+        });
         if(getIntent().hasExtra("codigo") ){
 
             //Bundle bundle = this.getIntent().getExtras();
@@ -77,21 +92,17 @@ public class anadirTarea extends AppCompatActivity {
             }
 
 
-
+            enunciado.setText(c.getTitulo());
             pregunta1.setText(c.getRespuestaCorrecta());
             pregunta2.setText(c.getRespuestaIncorrecta1());
             pregunta3.setText(c.getRespuestaIncorrecta2());
             pregunta4.setText(c.getRespuestaIncorrecta3());
-            enunciado.setText(c.getTitulo());
+            spinnerCategoria.setSelection(Repositorio.getMisCategorias().indexOf(c.getCategoria()));
 
 
 
 
         }
-
-
-
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -118,16 +129,21 @@ public class anadirTarea extends AppCompatActivity {
                 EditText pregunta4 = (EditText) findViewById(R.id.pregunta4);
                 EditText enunciado2 = (EditText) findViewById(R.id.enunciado);
                 final String spinner;
+                spinner = ((Spinner) findViewById(R.id.categoriaSpinner)).getSelectedItem().toString();
+                //TODO hacer las categorias
+                //TODO limpiar el código
+                //TODO hacer funcionamiento con camara 
 
                 if (getCodigoPregunta() != -1) {
-                    Pregunta preguntaActualizar = new Pregunta(enunciado2.getText().toString(), pregunta1.getText().toString(), pregunta2.getText().toString(), pregunta3.getText().toString(), pregunta4.getText().toString(), getCodigoPregunta(), "php");
-
-                    Repositorio.actualizarPregunta(context, preguntaActualizar);
+                    context = anadirTarea.this;
+                    if (compruebaPermisos(context) == 1) {
+                        Pregunta preguntaActualizar = new Pregunta(enunciado2.getText().toString(), pregunta1.getText().toString(), pregunta2.getText().toString(), pregunta3.getText().toString(), pregunta4.getText().toString(), getCodigoPregunta(),spinner);
+                        Repositorio.actualizarPregunta(context, preguntaActualizar);
+                    }
                 } else {
 
                     // Metemos en variables el String de las preguntas
 
-                    context = anadirTarea.this;
                     String respuestaCorrecta = pregunta1.getText().toString();
                     String respuestaIncorrecta1 = pregunta2.getText().toString();
                     String respuestaIncorrecta2 = pregunta3.getText().toString();
@@ -152,32 +168,48 @@ public class anadirTarea extends AppCompatActivity {
                         Snackbar.make(view, "Rellena los campos", Snackbar.LENGTH_LONG).
                                 setAction("Action", null).show();
                     } else {
-
-                        // Ahora que los campos están comprobados, vamos a ver los permisos
+                        //TODO arreglar mal funcionamiento permisos
                         context = anadirTarea.this;
-                        int WriteExternalStoragePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                        if (WriteExternalStoragePermission != PackageManager.PERMISSION_GRANTED) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                ActivityCompat.requestPermissions(anadirTarea.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
-                            } else {
-                                Snackbar.make(constraint, "Permisos denegados, no se guardaran las preguntas.", Snackbar.LENGTH_LONG)
-                                        .show();
-
-                            }
-                        } else {
+                        if (compruebaPermisos(context) == 1) {
                             Snackbar.make(constraint, getResources().getString(R.string.write_permission_granted), Snackbar.LENGTH_LONG)
                                     .show();
                             Repositorio miRepo = new Repositorio();
-                            EditText enunciado = findViewById(R.id.enunciado);
+                            EditText enunciado = (EditText) findViewById(R.id.enunciado);
                             String enunciadoS = enunciado.getText().toString();
-                            Pregunta miPregunta = new Pregunta(enunciadoS, respuestaCorrecta, respuestaIncorrecta1, respuestaIncorrecta2, respuestaIncorrecta3, "php");
+                            Pregunta miPregunta = new Pregunta(enunciadoS, respuestaCorrecta, respuestaIncorrecta1, respuestaIncorrecta2, respuestaIncorrecta3, spinner);
                             miRepo.insertaPregunta(context, miPregunta);
+                        } else if (compruebaPermisos(context) == 2 ){
+                            Snackbar.make(constraint, " Pidiendo permisos ", Snackbar.LENGTH_LONG)
+                                    .show();
+
+                        } else if ( compruebaPermisos(context) == 0 ) {
+                            Snackbar.make(constraint, "Permisos denegados, no se guardaran las preguntas.", Snackbar.LENGTH_LONG)
+                                    .show();
                         }
+
                     }
 
                 }
             }
         });
+    }
+
+
+    public int compruebaPermisos(Context context){
+        int WriteExternalStoragePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (WriteExternalStoragePermission != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                ActivityCompat.requestPermissions(anadirTarea.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
+            } else {
+                // 0 si no se obtuvieron permisos
+                return 0;
+            }
+        } else {
+            // uno si si se obtuvieron permisos
+          return 1;
+        }
+        // 2 si se esta pidiendo los permisos
+        return 2;
     }
 
 
