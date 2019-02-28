@@ -21,8 +21,9 @@ public class Repositorio {
         SQLiteDatabase db = miBD.getWritableDatabase();
 
         if(db != null) {
-            db.execSQL("INSERT INTO Preguntas (titulo, respuestaCorrecta, respuestaIncorrecta1, respuestaIncorrecta2, respuestaIncorrecta3,categoria)"+
-                    "VALUES ('" + miPregunta.getTitulo()+ "', '" + miPregunta.getRespuestaCorrecta() + "', '"+ miPregunta.getRespuestaIncorrecta1()+"', '"+ miPregunta.getRespuestaIncorrecta2()+"', '"+miPregunta.getRespuestaIncorrecta3()+"', '"+miPregunta.getCategoria()+"')");
+            System.out.println("Al menos he entrado aqui");
+            db.execSQL("INSERT INTO Preguntas (titulo, respuestaCorrecta, respuestaIncorrecta1, respuestaIncorrecta2, respuestaIncorrecta3,categoria,foto)"+
+                    "VALUES ('" + miPregunta.getTitulo()+ "', '" + miPregunta.getRespuestaCorrecta() + "', '"+ miPregunta.getRespuestaIncorrecta1()+"', '"+ miPregunta.getRespuestaIncorrecta2()+"', '"+miPregunta.getRespuestaIncorrecta3()+"', '"+miPregunta.getCategoria()+"', '"+miPregunta.getFoto()+"')");
         }
         db.close();
     }
@@ -31,6 +32,7 @@ public class Repositorio {
 
         SQLITEHelper usdbh = new SQLITEHelper(myContext,nombreBD, null, 1);
         SQLiteDatabase db = usdbh.getWritableDatabase();
+        //usdbh.destrozaBasedatos(nombreBD,myContext);
         Cursor c = db.rawQuery("SELECT * FROM Preguntas", null);
         if (c.moveToFirst()) {
             //Recorremos el cursor hasta que no haya más registros
@@ -42,7 +44,8 @@ public class Repositorio {
                 String respuestaIncorrecta1 = c.getString(c.getColumnIndex("respuestaIncorrecta1"));
                 String respuestaIncorrecta2 = c.getString(c.getColumnIndex("respuestaIncorrecta2"));
                 String respuestaIncorrecta3 = c.getString(c.getColumnIndex("respuestaIncorrecta3"));
-                Pregunta miPregunta = new Pregunta(enunciado,respuestaCorrecta,respuestaIncorrecta1,respuestaIncorrecta2,respuestaIncorrecta3,codigo,categoria);
+                String foto = c.getString(c.getColumnIndex("foto"));
+                Pregunta miPregunta = new Pregunta(enunciado,respuestaCorrecta,respuestaIncorrecta1,respuestaIncorrecta2,respuestaIncorrecta3,codigo,categoria,foto);
                 misPreguntas.add(miPregunta);
             } while (c.moveToNext());
 
@@ -77,7 +80,8 @@ public class Repositorio {
             String respuestaIncorrecta1 = c.getString(c.getColumnIndex("respuestaIncorrecta1"));
             String respuestaIncorrecta2 = c.getString(c.getColumnIndex("respuestaIncorrecta2"));
             String respuestaIncorrecta3 = c.getString(c.getColumnIndex("respuestaIncorrecta3"));
-            miPregunta = new Pregunta(enunciado, respuestaCorrecta, respuestaIncorrecta1, respuestaIncorrecta2, respuestaIncorrecta3, codigo,categoria);
+            String foto = c.getString(c.getColumnIndex("foto"));
+            miPregunta = new Pregunta(enunciado, respuestaCorrecta, respuestaIncorrecta1, respuestaIncorrecta2, respuestaIncorrecta3, codigo,categoria,foto);
 
             return miPregunta;
         }
@@ -98,6 +102,7 @@ public class Repositorio {
                 vals.put("respuestaIncorrecta1",p.getRespuestaIncorrecta1());
                 vals.put("respuestaIncorrecta2",p.getRespuestaIncorrecta2());
                 vals.put("respuestaIncorrecta3",p.getRespuestaIncorrecta3());
+                vals.put("foto",p.getFoto());
 
                 String [] args = new String [] {Integer.toString(p.getCodigo())};
                 db.update(tablaNombre,vals, "codigo=?",args);
@@ -105,6 +110,14 @@ public class Repositorio {
 
             }else {val = false;}
             return val;
+        }
+
+        public static void eliminaPregunta(Context myContext, Pregunta p) {
+            SQLITEHelper usdbh = new SQLITEHelper(myContext,nombreBD, null, 1);
+            SQLiteDatabase db = usdbh.getWritableDatabase();
+            db.execSQL("DELETE FROM '+Preguntas+' WHERE codigo='"+p.getCodigo()+"' ");
+            //Cerramoslabasededatos
+            db.close();
         }
 
 

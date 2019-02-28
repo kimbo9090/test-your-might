@@ -14,11 +14,13 @@ public class Pregunta {
 
     private String categoria;
 
+    private String foto;
+
     private int codigo;
     // Dos contructores, uno con codigo y otro sin codigo
     public Pregunta(String titulo, String respuestaCorrecta, String respuestaIncorrecta1,
                     String respuestaIncorrecta2, String respuestaIncorrecta3, int codigo,
-                    String categoria) {
+                    String categoria,String foto) {
         this.titulo = titulo;
         this.respuestaCorrecta = respuestaCorrecta;
         this.respuestaIncorrecta1 = respuestaIncorrecta1;
@@ -26,16 +28,18 @@ public class Pregunta {
         this.respuestaIncorrecta3 = respuestaIncorrecta3;
         this.codigo = codigo;
         this.categoria = categoria;
+        this.foto = foto;
     }
 
     public Pregunta(String titulo, String respuestaCorrecta, String respuestaIncorrecta1,
-                    String respuestaIncorrecta2, String respuestaIncorrecta3,String categoria) {
+                    String respuestaIncorrecta2, String respuestaIncorrecta3,String categoria,String foto) {
         this.titulo = titulo;
         this.respuestaCorrecta = respuestaCorrecta;
         this.respuestaIncorrecta1 = respuestaIncorrecta1;
         this.respuestaIncorrecta2 = respuestaIncorrecta2;
         this.respuestaIncorrecta3 = respuestaIncorrecta3;
         this.categoria = categoria;
+        this.foto = foto;
     }
     public Pregunta(){
 
@@ -79,6 +83,14 @@ public class Pregunta {
 
     public void setRespuestaIncorrecta3(String respuestaIncorrecta3) {
         this.respuestaIncorrecta3 = respuestaIncorrecta3;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     public int getCodigo() {
