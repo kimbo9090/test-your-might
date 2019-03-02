@@ -38,6 +38,10 @@ import android.widget.TextView;
 
 import com.tomas9080gmail.test_your_might.tareas.Pregunta;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -57,13 +61,12 @@ public class anadirTarea extends AppCompatActivity {
     private static final int REQUEST_SELECT_IMAGE = 201;
     private Context context;
     private ConstraintLayout constraint;
-    private ArrayAdapter <String> adapter;
+    private ArrayAdapter<String> adapter;
     private Spinner spinnerCategoria;
     private int codigoPregunta = -1;
     private static final int REQUEST_CAPTURE_IMAGE = 200;
     Repositorio miRepo = new Repositorio();
     final String pathFotos = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/demoAndroid/";
-
 
 
     public int getCodigoPregunta() {
@@ -82,7 +85,7 @@ public class anadirTarea extends AppCompatActivity {
         constraint = (ConstraintLayout) findViewById(R.id.constraint);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Button botonCategorias = (Button) findViewById(R.id.anadir_categoria);
-        final ImageView photo = (ImageView)findViewById(R.id.imageView2);
+        final ImageView photo = (ImageView) findViewById(R.id.imageView2);
         EditText pregunta1 = (EditText) findViewById(R.id.pregunta1);
         EditText pregunta2 = (EditText) findViewById(R.id.pregunta2);
         EditText pregunta3 = (EditText) findViewById(R.id.pregunta3);
@@ -92,7 +95,7 @@ public class anadirTarea extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         context = anadirTarea.this;
-        ArrayList<String>categorias = new ArrayList<>();
+        ArrayList<String> categorias = new ArrayList<>();
         Repositorio.cargarCategorias(context);
         categorias = Repositorio.getMisCategorias();
         adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, categorias);
@@ -106,13 +109,13 @@ public class anadirTarea extends AppCompatActivity {
                 LayoutInflater layoutActivity = LayoutInflater.from(context);
             }
         });
-        if(getIntent().hasExtra("codigo") ){
+        if (getIntent().hasExtra("codigo")) {
 
             //Bundle bundle = this.getIntent().getExtras();
 
             codigoPregunta = getIntent().getExtras().getInt("codigo");
 
-            Pregunta c = miRepo.encuentraPreguntaID(context,codigoPregunta);
+            Pregunta c = miRepo.encuentraPreguntaID(context, codigoPregunta);
 
             if (c != null) {
                 System.out.println("Ee");
@@ -130,7 +133,6 @@ public class anadirTarea extends AppCompatActivity {
             photo.setImageBitmap(decodedByte);
 
 
-
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -144,9 +146,8 @@ public class anadirTarea extends AppCompatActivity {
         //Rellenamos el spinner cuando se crea la pantalla
 
 
-
         //Añadimos un listener para el boton guardar
-        final Button btnBotonSimple = (Button)findViewById(R.id.guardaPregunta);
+        final Button btnBotonSimple = (Button) findViewById(R.id.guardaPregunta);
         btnBotonSimple.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
 
@@ -161,19 +162,19 @@ public class anadirTarea extends AppCompatActivity {
                 //spinner = ((Spinner) findViewById(R.id.categoriaSpinner)).getSelectedItem().toString();
                 //TODO hacer las categorias
                 //TODO limpiar el código
-                //TODO hacer funcionamiento con camara 
+                //TODO hacer funcionamiento con camara
 
                 if (getCodigoPregunta() != -1) {
-                    ImageView imageView= findViewById(R.id.imageView2);
+                    ImageView imageView = findViewById(R.id.imageView2);
                     BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
-                    if(drawable!= null){
+                    if (drawable != null) {
                         bitmap = drawable.getBitmap();
-                    }else{
-                        bitmap=null;
+                    } else {
+                        bitmap = null;
                     }
                     context = anadirTarea.this;
                     if (compruebaPermisos(context) == 1) {
-                        Pregunta preguntaActualizar = new Pregunta(enunciado2.getText().toString(), pregunta1.getText().toString(), pregunta2.getText().toString(), pregunta3.getText().toString(), pregunta4.getText().toString(), getCodigoPregunta(),"php",convertirBase64(bitmap));
+                        Pregunta preguntaActualizar = new Pregunta(enunciado2.getText().toString(), pregunta1.getText().toString(), pregunta2.getText().toString(), pregunta3.getText().toString(), pregunta4.getText().toString(), getCodigoPregunta(), "php", convertirBase64(bitmap));
                         Repositorio.actualizarPregunta(context, preguntaActualizar);
                     }
                 } else {
@@ -212,14 +213,14 @@ public class anadirTarea extends AppCompatActivity {
                             Repositorio miRepo = new Repositorio();
                             EditText enunciado = (EditText) findViewById(R.id.enunciado);
                             String enunciadoS = enunciado.getText().toString();
-                            Pregunta miPregunta = new Pregunta(enunciadoS, respuestaCorrecta, respuestaIncorrecta1, respuestaIncorrecta2, respuestaIncorrecta3, "php",convertirBase64(bitmap));
+                            Pregunta miPregunta = new Pregunta(enunciadoS, respuestaCorrecta, respuestaIncorrecta1, respuestaIncorrecta2, respuestaIncorrecta3, "php", convertirBase64(bitmap));
                             miRepo.insertaPregunta(context, miPregunta);
                             uri = null;
-                        } else if (compruebaPermisos(context) == 2 ){
+                        } else if (compruebaPermisos(context) == 2) {
                             Snackbar.make(constraint, " Pidiendo permisos ", Snackbar.LENGTH_LONG)
                                     .show();
 
-                        } else if ( compruebaPermisos(context) == 0 ) {
+                        } else if (compruebaPermisos(context) == 0) {
                             Snackbar.make(constraint, "Permisos denegados, no se guardaran las preguntas.", Snackbar.LENGTH_LONG)
                                     .show();
                         }
@@ -240,13 +241,11 @@ public class anadirTarea extends AppCompatActivity {
         //TODO boton
 
 
-
-
-
         final Button botonFoto = (Button) findViewById(R.id.fotoButton);
         botonFoto.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-
+                compruebaPermisos(anadirTarea.this);
+                compruebaPermisosCamara();
                 hazFoto();
 
             }
@@ -256,18 +255,18 @@ public class anadirTarea extends AppCompatActivity {
         final Button botonGaleria = (Button) findViewById(R.id.galeriaButton);
         botonGaleria.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-
+                compruebaPermisos(anadirTarea.this);
+                compruebaPermisosCamara();
                 fotoGaleria();
 
             }
         });
 
 
-
     }
 
 
-    public int compruebaPermisos(Context context){
+    public int compruebaPermisos(Context context) {
         int WriteExternalStoragePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (WriteExternalStoragePermission != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -278,7 +277,7 @@ public class anadirTarea extends AppCompatActivity {
             }
         } else {
             // uno si si se obtuvieron permisos
-          return 1;
+            return 1;
         }
         // 2 si se esta pidiendo los permisos
         return 2;
@@ -287,34 +286,17 @@ public class anadirTarea extends AppCompatActivity {
     private void compruebaPermisosCamara() {
         int CameraPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA);
         if (CameraPermission != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                ActivityCompat.requestPermissions(anadirTarea.this, new String[] {Manifest.permission.CAMERA}, CODE_CAMERA_PERMISSION);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                ActivityCompat.requestPermissions(anadirTarea.this, new String[]{Manifest.permission.CAMERA}, CODE_CAMERA_PERMISSION);
             } else {
-                myLog.e("Los permisos: ","SIn permisos");
+                myLog.e("Los permisos: ", "SIn permisos");
             }
         } else {
-            myLog.e(",Los permisos: ","Sin permisos");
+            myLog.e(",Los permisos: ", "Sin permisos");
         }
     }
 
-
-    public static String aBase64(Bitmap m) {
-        String encoded = "";
-        if (m!=null) {
-            Bitmap resized = Bitmap.createScaledBitmap(m, 500, 500, true);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            resized.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] b = baos.toByteArray();
-            encoded = Base64.encodeToString(b, Base64.DEFAULT);
-            return encoded;
-        } else {
-            return encoded;
-        }
-    }
-
-
-
-    private String getFileCode(){
+    private String getFileCode() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyymmddhhmmss", java.util.Locale.getDefault());
         String date = dateFormat.format(new Date());
         // Se devuelve el código
@@ -331,14 +313,13 @@ public class anadirTarea extends AppCompatActivity {
     }
 
 
-
-    private void hazFoto(){
+    private void hazFoto() {
         compruebaPermisosCamara();
 
         try {
             File dirFotos = new File(pathFotos);
             dirFotos.mkdirs();
-            File fileFoto = File.createTempFile(getFileCode(),".jpg", dirFotos);
+            File fileFoto = File.createTempFile(getFileCode(), ".jpg", dirFotos);
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
             uri = Uri.fromFile(fileFoto);
@@ -354,8 +335,8 @@ public class anadirTarea extends AppCompatActivity {
 
     }
 
-    protected void onActivityResult(int requestCode,int resultCode,Intent data) {
-        switch(requestCode)  {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
             case (REQUEST_CAPTURE_IMAGE):
                 if (resultCode == Activity.RESULT_OK) {
                     ImageView imageView = findViewById(R.id.imageView2);
@@ -367,7 +348,7 @@ public class anadirTarea extends AppCompatActivity {
                     Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                     mediaScanIntent.setData(uri);
                     sendBroadcast(mediaScanIntent);
-                }else if (resultCode == Activity.RESULT_CANCELED){
+                } else if (resultCode == Activity.RESULT_CANCELED) {
                     File file = new File(uri.getPath());
                     file.delete();
                 }
@@ -375,7 +356,7 @@ public class anadirTarea extends AppCompatActivity {
 
 
             case (REQUEST_SELECT_IMAGE):
-                if(resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK) {
                     Uri imagenSeleccionada = data.getData();
                     String pathSeleccionada = imagenSeleccionada.getPath();
                     if (pathSeleccionada != null) {
@@ -403,11 +384,11 @@ public class anadirTarea extends AppCompatActivity {
     public static String convertirBase64(Bitmap bm) {
         String encodedImage = "";
         if (bm != null) {
-            Bitmap rescala = Bitmap.createScaledBitmap(bm,500,500,true);
+            Bitmap rescala = Bitmap.createScaledBitmap(bm, 500, 500, true);
             ByteArrayOutputStream b = new ByteArrayOutputStream();
-            rescala.compress(Bitmap.CompressFormat.JPEG,100,b);
-            byte [] ba = b.toByteArray();
-            encodedImage = Base64.encodeToString(ba,Base64.DEFAULT);
+            rescala.compress(Bitmap.CompressFormat.JPEG, 100, b);
+            byte[] ba = b.toByteArray();
+            encodedImage = Base64.encodeToString(ba, Base64.DEFAULT);
             return encodedImage;
         } else {
             return encodedImage;
@@ -415,13 +396,75 @@ public class anadirTarea extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         finish();
     }
+
     @Override
-    public boolean onNavigateUp(){
+    public boolean onNavigateUp() {
         finish();
         return true;
     }
-}
 
+
+    public void importarXML(Context miContexto, Intent miIntent) {
+
+
+         String titulo;
+
+         String respuestaCorrecta;
+
+         String respuestaIncorrecta1;
+
+         String respuestaIncorrecta2;
+
+         String respuestaIncorrecta3;
+
+         String categoria;
+
+         String foto;
+
+         int count = 0;
+
+
+         if (miIntent != null) {
+             String accion = miIntent.getAction();
+             if (accion == "android.intent.action.SEND") {
+                 Uri datos = miIntent.getParcelableExtra(Intent.EXTRA_STREAM);
+
+                 try {
+                     InputStream in = miContexto.getContentResolver().openInputStream(datos);
+                     XmlPullParserFactory xp = XmlPullParserFactory.newInstance();
+                     xp.setNamespaceAware(false);
+                     XmlPullParser parser = xp.newPullParser();
+                     parser.setInput(in, null);
+                     parser.nextTag();
+                     parser.require(XmlPullParser.START_TAG, null, "quiz");
+                     int a;
+                     String tag="";
+                     while((a=parser.next()) != XmlPullParser.END_DOCUMENT) {
+
+                         switch  (a) {
+                             case XmlPullParser.START_TAG:
+                                 tag = parser.getName();
+                                 break;
+                             case XmlPullParser.TEXT:
+                                 if (tag.equals("text")) {
+                                     if ( a == 0) {
+
+                                     }
+                                 }
+                         }
+
+                     }
+                     } catch (IOException | XmlPullParserException e) {
+                 }
+             }
+         }
+
+
+
+
+
+    }
+}
