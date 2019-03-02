@@ -24,6 +24,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -41,12 +42,15 @@ import com.tomas9080gmail.test_your_might.tareas.Pregunta;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlpull.v1.XmlSerializer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -251,6 +255,16 @@ public class anadirTarea extends AppCompatActivity {
             }
         });
 
+        final Button botonExportar = (Button) findViewById(R.id.ExportaXML);
+        botonExportar.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                System.out.println("SI o qyuee");
+                exportarXML(anadirTarea.this);
+            }
+        });
+
+
+
 
         final Button botonGaleria = (Button) findViewById(R.id.galeriaButton);
         botonGaleria.setOnClickListener(new View.OnClickListener() {
@@ -410,19 +424,21 @@ public class anadirTarea extends AppCompatActivity {
     public void importarXML(Context miContexto, Intent miIntent) {
 
 
-         String titulo;
+         Pregunta p;
 
-         String respuestaCorrecta;
+         String titulo="";
 
-         String respuestaIncorrecta1;
+         String respuestaCorrecta="";
 
-         String respuestaIncorrecta2;
+         String respuestaIncorrecta1="";
 
-         String respuestaIncorrecta3;
+         String respuestaIncorrecta2="";
 
-         String categoria;
+         String respuestaIncorrecta3="";
 
-         String foto;
+         String categoria="";
+
+         String foto = "";
 
          int count = 0;
 
@@ -451,20 +467,186 @@ public class anadirTarea extends AppCompatActivity {
                              case XmlPullParser.TEXT:
                                  if (tag.equals("text")) {
                                      if ( a == 0) {
+                                         titulo = parser.getText();
+                                         a++;
 
                                      }
+                                     else if (a == 1) {
+                                         categoria = parser.getText();
+                                         a++;
+                                     }
+                                     else if ( a == 2 ) {
+                                         a++;
+                                     }
+                                     else if ( a==3 ) {
+                                         respuestaCorrecta = parser.getText();
+                                         a++;
+                                     }
+                                     else if (a == 4) {
+                                         respuestaIncorrecta1 = parser.getText();
+                                         a++;
+                                     }
+                                     else if ( a==5 ) {
+                                         respuestaIncorrecta2 = parser.getText();
+                                         a++;
+                                     }
+                                     else if ( a==6 ) {
+                                         respuestaIncorrecta3 = parser.getText();
+
+                                         p = new Pregunta(titulo,respuestaCorrecta,  respuestaIncorrecta1,
+                                                  respuestaIncorrecta2,  respuestaIncorrecta3, categoria,foto);
+
+                                     }
+                                     a = 0;
+                                 } else {
+
                                  }
+                                 if (tag.equals("file")) {
+                                     foto= parser.getText();
+                                 }
+                                 tag = "";
+                                 break;
+
                          }
 
                      }
+                     in.close();
                      } catch (IOException | XmlPullParserException e) {
                  }
              }
          }
+    }
+
+    public static String CreateXMLString() throws IllegalArgumentException, IllegalStateException, IOException
+    {
+        ArrayList<Pregunta> preguntaXML = new ArrayList<Pregunta>();
+        preguntaXML= Repositorio.getMisPreguntas();
+        XmlSerializer xmlSerializer = Xml.newSerializer();
+        StringWriter writer = new StringWriter();
+
+        xmlSerializer.setOutput(writer);
+
+        xmlSerializer.startDocument("UTF-8", true);
+        xmlSerializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
+
+
+        xmlSerializer.startTag("", "preguntas");
+
+        for (Pregunta p: preguntaXML) {
+
+
+            xmlSerializer.startTag("", "question");
+            xmlSerializer.attribute("", "type", p.getCategoria());
+
+            xmlSerializer.startTag("", "category");
+            xmlSerializer.startTag("", "text");
+            xmlSerializer.text(p.getCategoria());
+            xmlSerializer.endTag("", "text");
+            xmlSerializer.endTag("", "category");
+
+            xmlSerializer.endTag("", "question");
+            xmlSerializer.startTag("", "question");
+            xmlSerializer.attribute("", "type", "multichoice");
+
+            xmlSerializer.startTag("", "name");
+            xmlSerializer.startTag("", "text");
+            xmlSerializer.text(p.getTitulo());
+            xmlSerializer.endTag("", "text");
+            xmlSerializer.endTag("", "name");
+
+            xmlSerializer.startTag("","questiontext");
+            xmlSerializer.attribute("", "format", "html");
+            xmlSerializer.startTag("", "text");
+            xmlSerializer.text("<![CDATA[ <p>"+p.getTitulo()+"</p><p><img src='imagen.jpg' /></p>]]>");
+            xmlSerializer.endTag("", "text");
+            xmlSerializer.startTag("","file");
+            xmlSerializer.attribute("", "name","imagen.jpg");
+            xmlSerializer.attribute("", "path", "/");
+            xmlSerializer.attribute("", "encoding", "base64");
+            xmlSerializer.text( p.getFoto());
+            xmlSerializer.endTag("", "file");
+            xmlSerializer.endTag("", "questiontext");
+
+            xmlSerializer.startTag("","answernumbering");
+            xmlSerializer.endTag("", "answernumbering");
+
+            xmlSerializer.startTag("","answer");
+            xmlSerializer.attribute("","fraction", "100");
+            xmlSerializer.attribute("", "format", "html");
+            xmlSerializer.startTag("", "text");
+            xmlSerializer.text(p.getRespuestaCorrecta());
+            xmlSerializer.endTag("", "text");
+            xmlSerializer.endTag("", "answer");
+
+            xmlSerializer.startTag("","answer");
+            xmlSerializer.attribute("","fraction", "0");
+            xmlSerializer.attribute("", "format", "html");
+            xmlSerializer.startTag("", "text");
+            xmlSerializer.text(p.getRespuestaIncorrecta1());
+            xmlSerializer.endTag("", "text");
+            xmlSerializer.endTag("", "answer");
+
+            xmlSerializer.startTag("","answer");
+            xmlSerializer.attribute("","fraction", "0");
+            xmlSerializer.attribute("", "format", "html");
+            xmlSerializer.startTag("", "text");
+            xmlSerializer.text(p.getRespuestaIncorrecta2());
+            xmlSerializer.endTag("", "text");
+            xmlSerializer.endTag("", "answer");
+
+            xmlSerializer.startTag("","answer");
+            xmlSerializer.attribute("","fraction", "0");
+            xmlSerializer.attribute("", "format", "html");
+            xmlSerializer.startTag("", "text");
+            xmlSerializer.text(p.getRespuestaIncorrecta3());
+            xmlSerializer.endTag("", "text");
+            xmlSerializer.endTag("", "answer");
+
+            xmlSerializer.endTag("","question");
+        }
+
+        xmlSerializer.endTag("","preguntas");
 
 
 
+        xmlSerializer.endDocument();
+
+
+
+        return writer.toString();
 
 
     }
+
+    public static void exportarXML(Context myContext) {
+        String root = Environment.getExternalStorageDirectory().toString();
+        System.out.println(root);
+        File myDir = new File(root + "/exportarPreguntas");
+        String fname = "preguntas.xml";
+        File file = new File(myDir, fname);
+        try {
+
+            if (!myDir.exists()) {
+                myDir.mkdirs();
+
+            }
+            if (file.exists())
+                file.delete();
+
+
+            FileWriter fw = new FileWriter(file);
+            fw.write(CreateXMLString());
+
+
+            //Cierro el stream
+            fw.close();
+
+
+        } catch (Exception ex) {
+
+        }
+    }
+
+
+
 }

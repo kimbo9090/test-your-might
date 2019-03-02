@@ -55,6 +55,18 @@
             tools:layout_editor_absoluteY="103dp" />
 
         <Button
+            android:id="@+id/ExportaXML"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="153dp"
+            android:layout_marginTop="463dp"
+            android:text="Exporta"
+            tools:layout_editor_absoluteX="44dp"
+            tools:layout_editor_absoluteY="103dp" />
+
+        <Button
             android:id="@+id/galeriaButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
