@@ -8,4 +8,19 @@
     tools:context=".resumen"
     tools:showIn="@layout/activity_resumen">
 
+    <Button
+        android:id="@+id/importar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Importar"
+        tools:layout_editor_absoluteX="219dp"
+        tools:layout_editor_absoluteY="80dp" />
+
+    <Button
+        android:id="@+id/exportar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exportar"
+        tools:layout_editor_absoluteX="72dp"
+        tools:layout_editor_absoluteY="80dp" />
 </android.support.constraint.ConstraintLayout>

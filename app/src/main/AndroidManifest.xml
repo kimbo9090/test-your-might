@@ -17,10 +17,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".resumen"
-            android:label="@string/title_activity_resumen"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".acercaDe" />
         <activity
             android:name=".listadoPreguntas"
@@ -30,6 +26,14 @@
             android:name=".anadirTarea"
             android:label="@string/title_activity_anadir_tarea"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".resumen"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/*"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
