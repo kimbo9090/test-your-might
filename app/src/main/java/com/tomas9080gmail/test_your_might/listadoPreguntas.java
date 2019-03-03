@@ -21,6 +21,7 @@ import com.tomas9080gmail.test_your_might.tareas.adapter;
 public class listadoPreguntas extends AppCompatActivity {
     private Context myContext;
     private ArrayList<Pregunta> items;
+    private ArrayList<Pregunta> items2;
     private static final String TAG = "ListadoPreguntas";
     private TextView textView;
 
@@ -45,6 +46,9 @@ public class listadoPreguntas extends AppCompatActivity {
                 listadoPreguntas.this.startActivity(myIntent);
             }
         });
+
+
+
         myLog.d(TAG, "Finalizando OnCreate");
 
     }
@@ -73,13 +77,25 @@ public class listadoPreguntas extends AppCompatActivity {
 
                    Intent editintent = new Intent(listadoPreguntas.this, anadirTarea.class);
 
+                   System.out.println("Codigo que va a petar porque intento eliminar el ultimo");
+                   int miPrima2 = items.get(position).getCodigo();
 
-                   //bundle.putInt("codigo", items.get(position).getCodigo());
+                   System.out.println(items.get(position).getCodigo());
                    editintent.putExtra("codigo", items.get(position).getCodigo());
 
                     int miPrima = items.get(position).getCodigo();
                    startActivity(editintent);
 
+               }
+           });
+           adapter.setOnLongListener(new View.OnLongClickListener() {
+               @Override
+               public boolean onLongClick(View view) {
+                   System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEO AQUI");
+                   int position = recyclerView.getChildAdapterPosition(view);
+                   int esto = items.get(position).getCodigo();
+                   System.out.println(esto);
+                   return true;
                }
            });
            recyclerView.setAdapter(adapter);

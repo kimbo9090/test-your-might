@@ -1,5 +1,8 @@
 package com.tomas9080gmail.test_your_might;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +18,8 @@ import android.view.Menu;
 import android.content.Intent;
 import android.view.MenuItem;
 import android.database.sqlite.SQLiteDatabase;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
 import com.tomas9080gmail.test_your_might.tareas.Pregunta;
@@ -38,23 +43,24 @@ public class resumen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resumen);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Animation myAnim = AnimationUtils.loadAnimation(resumen.this, R.anim.animation);
+
         setSupportActionBar(toolbar);
         Context myContext = this;
         this.importarXML();
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
+
+
+        final Button botonExportar = (Button) findViewById(R.id.exportar);
+        botonExportar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-
-            }
-        });
-
-        final Button botonImportar = (Button) findViewById(R.id.importar);
-        botonImportar.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-
-
-
+                System.out.println("Exportar dandole duro");
+                Animator scale = ObjectAnimator.ofPropertyValuesHolder(view,
+                        PropertyValuesHolder.ofFloat(View.SCALE_X, 1, 1.5f, 1),
+                        PropertyValuesHolder.ofFloat(View.SCALE_Y, 1, 1.5f, 1)
+                );
+                scale.setDuration(1000);
+                scale.start();
+                exportarXML(resumen.this);
             }
         });
 

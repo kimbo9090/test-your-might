@@ -15,6 +15,7 @@ public class adapter
 
     private ArrayList<Pregunta> items;
     private View.OnClickListener listener;
+    private View.OnLongClickListener listenerLargo;
 
     // Clase interna:
     // Se implementa el ViewHolder que se encargará¡
@@ -72,6 +73,8 @@ public class adapter
     public void setOnClickListener(View.OnClickListener listener) {
         this.listener = listener;
     }
+
+    public void setOnLongListener(View.OnLongClickListener listenerLargo) {this.listenerLargo = listenerLargo;};
 
     @Override
     public void onClick(View view) {

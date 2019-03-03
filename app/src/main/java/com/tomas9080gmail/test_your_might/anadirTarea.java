@@ -138,16 +138,18 @@ public class anadirTarea extends AppCompatActivity {
 
 
         }
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
+        final Button eliminarButton  = (Button) findViewById(R.id.eliminarP);
+        eliminarButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                codigoPregunta = getCodigoPregunta();
+                if (codigoPregunta != -1) {
+                    Repositorio.eliminaPregunta(anadirTarea.this,codigoPregunta);
+                    finish();
+                }
+
+
             }
         });
-        //Rellenamos el spinner cuando se crea la pantalla
 
 
         //Añadimos un listener para el boton guardar

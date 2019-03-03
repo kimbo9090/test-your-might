@@ -112,11 +112,11 @@ public class Repositorio {
             return val;
         }
 
-        public static void eliminaPregunta(Context myContext, Pregunta p) {
+        public static void eliminaPregunta(Context myContext, int codigo) {
+        String tabla = tablaNombre;
             SQLITEHelper usdbh = new SQLITEHelper(myContext,nombreBD, null, 1);
             SQLiteDatabase db = usdbh.getWritableDatabase();
-            db.execSQL("DELETE FROM '+Preguntas+' WHERE codigo='"+p.getCodigo()+"' ");
-            //Cerramoslabasededatos
+            db.execSQL("DELETE FROM "+tablaNombre+" WHERE codigo='"+codigo+"' ");
             db.close();
         }
 
